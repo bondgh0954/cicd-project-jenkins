@@ -1,3 +1,5 @@
+#!/user/bin/env groovy
+@Library('shared-library')
 def gv
 pipeline{
   agent any
@@ -17,20 +19,16 @@ pipeline{
     stage('build jar'){
       steps{
         script{
-          echo 'building application artifact'
-          sh 'mvn package'
+          buildJar()
         }
       }
     }
     stage('build image'){
       steps{
         script{
-          echo 'building docker image from the application artifact'
-          withCredentials([usernamePassword(credentialsId:'dockerhub-credentials',usernameVariable:'USER',passwordVariable:'PASS')]){
-            sh "echo $PASS | docker login -u $USER --password-stdin"
-            sh 'docker build -t nanaot/java-app:8.8 .'
-            sh 'docker push nanaot/java-app:8.8'
-          }
+          dockerLogin()
+          buildImage 'nanaot/java-app:8.9'
+          pushImage 'nanaot/java-app:8.9'
         }
       }
     }
