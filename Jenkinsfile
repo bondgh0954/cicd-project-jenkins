@@ -37,8 +37,8 @@ pipeline{
               echo 'building application into a docker image'
               withCredentials([usernamePassword(credentialsId:'dockerhub-credentials',usernameVariable:'USER',passwordVariable:'PASSWORD')]){
                 sh "echo $PASSWORD |docker login -u $USER --password-stdin"
-                sh "docker build -t nanaot/java-app:$IMAGE_NAME" .
-                sh "docker push nanaot/java-app:$IMAGE_NAME"
+                sh "docker build -t nanaot/java-app:${IMAGE_NAME} ."
+                sh "docker push nanaot/java-app:${IMAGE_NAME}"
               }
 
             }
